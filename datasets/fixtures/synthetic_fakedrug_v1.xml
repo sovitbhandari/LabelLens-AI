@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="urn:hl7-org:v3">
+  <id root="aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"/>
+  <code code="34391-3" displayName="HUMAN PRESCRIPTION DRUG LABEL"/>
+  <title>SYNTHETIC EXAMPLE (FAKE DRUG) TABLET [TEST LAB]</title>
+  <effectiveTime value="20240101"/>
+  <setId root="11111111-2222-3333-4444-555555555555"/>
+  <versionNumber value="1"/>
+  <author>
+    <assignedEntity>
+      <representedOrganization>
+        <name>TEST LAB</name>
+      </representedOrganization>
+    </assignedEntity>
+  </author>
+  <component>
+    <structuredBody>
+      <component>
+        <section>
+          <id root="sec-warnings"/>
+          <code code="34071-1" displayName="WARNINGS SECTION"/>
+          <title>WARNINGS</title>
+          <text>
+            <paragraph>Do not use if allergic to FakeDrug. This is SYNTHETIC test content only.</paragraph>
+          </text>
+        </section>
+      </component>
+      <component>
+        <section>
+          <id root="sec-indications"/>
+          <code code="34067-9" displayName="INDICATIONS AND USAGE SECTION"/>
+          <title>INDICATIONS AND USAGE</title>
+          <text>
+            <paragraph>FakeDrug is indicated for demonstration of LabelLens parsing. Not a real medicine.</paragraph>
+          </text>
+        </section>
+      </component>
+    </structuredBody>
+  </component>
+</document>

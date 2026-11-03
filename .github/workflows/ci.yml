@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: labellens
+          POSTGRES_PASSWORD: labellens
+          POSTGRES_DB: labellens_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U labellens -d labellens_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    defaults:
+      run:
+        working-directory: apps/api
+    env:
+      DATABASE_URL: postgresql+psycopg://labellens:labellens@localhost:5432/labellens_test
+      TEST_DATABASE_URL: postgresql+psycopg://labellens:labellens@localhost:5432/labellens_test
+      HF_HUB_DISABLE_IMPLICIT_TOKEN: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Poetry
+        run: pip install poetry==2.3.2
+      - name: Install dependencies
+        run: poetry install --no-interaction
+      - name: Enable pgvector
+        run: |
+          sudo apt-get update
+          PGPASSWORD=labellens psql -h localhost -U labellens -d labellens_test -c 'CREATE EXTENSION IF NOT EXISTS vector; CREATE EXTENSION IF NOT EXISTS pg_trgm;'
+      - name: Ruff
+        run: poetry run ruff check app tests
+      - name: Pytest
+        run: poetry run pytest -q
+      # mypy not gated yet — enable only after the codebase is typed cleanly (see PROGRESS.md)
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - name: Install
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Build
+        run: npm run build
+
+  # Browser e2e requires a live API+DB stack; run locally with:
+  #   npm run test:e2e  (apps/web) while API is serving on :8000
+  # Not gated in CI until a service-composed e2e job is added.
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build API image
+        run: docker build -f infra/docker/Dockerfile.api -t labellens-api:ci .

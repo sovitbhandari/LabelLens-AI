@@ -1,0 +1,73 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: labellens-db
+    environment:
+      POSTGRES_USER: labellens
+      POSTGRES_PASSWORD: labellens
+      POSTGRES_DB: labellens
+    ports:
+      - "5432:5432"
+    volumes:
+      - labellens_pgdata:/var/lib/postgresql/data
+      - ./infra/docker/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U labellens -d labellens"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  mlflow:
+    image: python:3.12-slim
+    container_name: labellens-mlflow
+    working_dir: /mlflow
+    command: >
+      bash -c "pip install --no-cache-dir mlflow==2.17.2 &&
+      mlflow server --host 0.0.0.0 --port 5000
+      --backend-store-uri sqlite:///mlflow/mlflow.db
+      --default-artifact-root /mlflow/artifacts"
+    ports:
+      - "5001:5000"
+    volumes:
+      - labellens_mlflow:/mlflow
+
+  api:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.api
+    container_name: labellens-api
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://labellens:labellens@db:5432/labellens
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      mlflow:
+        condition: service_started
+    volumes:
+      - ./apps/api:/app
+      - ./datasets:/datasets
+    profiles:
+      - full
+
+  web:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.web
+    container_name: labellens-web
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000
+    depends_on:
+      - api
+    profiles:
+      - full
+
+volumes:
+  labellens_pgdata:
+  labellens_mlflow:

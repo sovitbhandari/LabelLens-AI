@@ -1,0 +1,45 @@
+{
+  "name": "labellens-lipitor-author-curated",
+  "version": "v1",
+  "description": "Author-curated evaluation items based on the real ingested Lipitor DailyMed SPL (set_id a60cc18b-0631-4cf0-b021-9f52224ece65, version 8). NOT an independently human-validated clinical gold set. Expected substrings were checked against ingested section text by the project author during development.",
+  "is_synthetic": false,
+  "review_status": "author_curated_not_independently_validated",
+  "items": [
+    {
+      "id": "lip-1",
+      "question": "Is Lipitor contraindicated in acute liver failure?",
+      "set_id": "a60cc18b-0631-4cf0-b021-9f52224ece65",
+      "spl_version": 8,
+      "expected_section_loincs": ["42229-5"],
+      "expected_passage_substrings": ["contraindicated in patients with acute liver failure"],
+      "answerable": true
+    },
+    {
+      "id": "lip-2",
+      "question": "What should be done if serious hepatic injury with jaundice occurs during Lipitor therapy?",
+      "set_id": "a60cc18b-0631-4cf0-b021-9f52224ece65",
+      "spl_version": 8,
+      "expected_section_loincs": ["42229-5"],
+      "expected_passage_substrings": ["promptly discontinue"],
+      "answerable": true
+    },
+    {
+      "id": "lip-3",
+      "question": "What poison control number is listed for Lipitor overdose?",
+      "set_id": "a60cc18b-0631-4cf0-b021-9f52224ece65",
+      "spl_version": 8,
+      "expected_section_loincs": ["34088-5"],
+      "expected_passage_substrings": ["1-800-222-1222"],
+      "answerable": true
+    },
+    {
+      "id": "lip-4",
+      "question": "What is the recommended Lipitor dose for a 4-year-old with familial hypercholesterolemia according to a 2030 European pediatric protocol?",
+      "set_id": "a60cc18b-0631-4cf0-b021-9f52224ece65",
+      "spl_version": 8,
+      "expected_section_loincs": [],
+      "expected_passage_substrings": [],
+      "answerable": false
+    }
+  ]
+}

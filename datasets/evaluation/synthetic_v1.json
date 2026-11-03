@@ -1,0 +1,35 @@
+{
+  "name": "labellens-synthetic",
+  "version": "v1",
+  "description": "SYNTHETIC evaluation fixtures for unit/integration tests only. Not human-reviewed clinical content.",
+  "is_synthetic": true,
+  "items": [
+    {
+      "id": "syn-1",
+      "question": "What are the warnings for FakeDrug?",
+      "set_id": "11111111-2222-3333-4444-555555555555",
+      "spl_version": 1,
+      "expected_section_loincs": ["34071-1"],
+      "expected_passage_substrings": ["allergic to FakeDrug"],
+      "answerable": true
+    },
+    {
+      "id": "syn-2",
+      "question": "What is FakeDrug indicated for?",
+      "set_id": "11111111-2222-3333-4444-555555555555",
+      "spl_version": 1,
+      "expected_section_loincs": ["34067-9"],
+      "expected_passage_substrings": ["indicated for demonstration"],
+      "answerable": true
+    },
+    {
+      "id": "syn-3",
+      "question": "What is the pediatric dosing schedule for FakeDrug in neonates?",
+      "set_id": "11111111-2222-3333-4444-555555555555",
+      "spl_version": 1,
+      "expected_section_loincs": [],
+      "expected_passage_substrings": [],
+      "answerable": false
+    }
+  ]
+}

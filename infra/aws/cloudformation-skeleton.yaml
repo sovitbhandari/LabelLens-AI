@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  LabelLens AI skeleton only. Not deployed. Replace ACCOUNT placeholders and
+  obtain explicit approval before creating paid resources.
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: labellens-dev
+
+Resources:
+  LabellensVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.20.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-vpc
+
+  # RDS PostgreSQL with pgvector must be installed via parameter group / extension
+  # after instance creation. Left intentionally incomplete to avoid accidental deploy.
+
+Outputs:
+  Note:
+    Value: Skeleton only — no RDS/ECS/ALB resources defined for safety.
